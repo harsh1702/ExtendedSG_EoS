@@ -1,0 +1,13 @@
+--- Liquid reference state ---
+
+Pressure      (p0)    [Pa]
+3568.2
+Temperature	(T0)	[K]
+300.15
+Density       (ro0)   [kg/m3]
+996.51
+Internal Energy	(e0)	[J/Kg]
+11.323e4
+Covolume	(bref)	[m^3/Kg]	
+0.0009125
+

@@ -1,0 +1,8 @@
+--- Atmospheric reference state ---
+
+Pressure      (p0)    [Pa]
+1e5
+Sound speed   (c0)    [m/s]
+1552.1
+Specific Volume (v0)	[m^3/Kg]
+0.0010182

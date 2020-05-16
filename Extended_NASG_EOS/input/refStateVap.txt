@@ -1,0 +1,13 @@
+--- Vapour reference state ---
+
+Pressure      (p0)    [Pa]
+3568.1
+Temperature	(T0)	[K]
+300.15
+Density       (ro0)   [kg/m3]
+0.025803788
+Internal Energy	(e0)	[J/Kg]
+0
+Covolume	(bref)	[m^3/Kg]	
+1e-6
+
