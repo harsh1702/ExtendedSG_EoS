@@ -4,7 +4,7 @@ This code will find the Stiffened gas EoS parameters according to the paper
 Alexandre Chiapolino, Richard Saurel. Extended Noble–Abel Stiffened-Gas Equation of State for
 Sub-and-Supercritical Liquid-Gas Systems Far from the Critical Point. Fluids, MDPI, 2018, 3 (3),
 pp.48. 10.3390/fluids3030048.hal-01836245<br/>
-Works for when the vapour is not considered an ideal gas the values for pInf for it are non-zero.
+Works for when the vapour is not considered an ideal gas the values for pInf for it are non-zero the given initial test case will not work for water vapour as it is approximately an ideal gas water was used as the test case to verify the code as the paper by Chiapolino et al aldready had given results for water.
 
 Compile by using<br/>
 $make
