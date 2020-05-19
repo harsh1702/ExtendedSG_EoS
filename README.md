@@ -24,4 +24,7 @@ Plotting results<br/>
 In the 'res' folder execute the command given below for plots of theoretical vs experimental inputs<br/>
 $./runPlot.sh
 
-The calculation of liquid and gaseous entropies is to be added.
+Things to add:-
+1)Better guessing for intial C value based on the pInf value from the NASG formulation
+2)Calculation of liquid and gaseous entropies.
+
