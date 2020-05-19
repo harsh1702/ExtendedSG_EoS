@@ -453,6 +453,8 @@ double computeF(double pressure, double temperature, double AL, double CL)
   return (((pressure + AL*temperature + CL)/temperature) - AL);
 }
 
+
+//This was my own method of solving the equation for cv, convergence was not able to be achieved in this case
 // **************************************************
 
 // double computecv(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& eLexp, double p0L, double T0L, double eL0, double Sv1, double Sv2, double b1L, double AL, double CL)
