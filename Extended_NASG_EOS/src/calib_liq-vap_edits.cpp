@@ -1,371 +1,269 @@
-// #include "calib_liq-vap_edits.h"
-// #include "tools.h"
-// #include <math.h>
-//
-// using namespace std;
-//
-// //Note that the arguements passed for all the functions are slightly wierd
-//
-//     //3 files for inputing the refference state and critical values data
-//     //one for liquid state
-//     //one for vapurs state
-//     //one for critical values
-//     //need to input much more data
-//
-// void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &brefLG)
-// {
-//
-//     ifstream strmRefStates("input/refStateLiq.txt");
-//     string line("");
-//     if (strmRefStates) {
-//         for (int i=1; i<5; i++) {getline(strmRefStates,line);}
-//         p0L = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         T0L = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         ro0L = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         e0L = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         brefL = stod(line);
-//     }
-//     else {
-//         cout << "Error : reading refStateLiq.txt file\n"; exit(0);
-//     }
-// }
-//
-// // **************************************************
-//
-// void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &brefG)
-// {
-//
-//     ifstream strmRefStates("input/refStateVap.txt");
-//     string line("");
-//     if (strmRefStates) {
-//         for (int i=1; i<5; i++) {getline(strmRefStates,line);}
-//         p0G = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         T0G = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         ro0G = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         e0G = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         brefG = stod(line);
-//     }
-//     else {
-//         cout << "Error : reading refStateVap.txt file\n"; exit(0);
-//     }
-// }
-//
-// // **************************************************
-//
-// void readCritInput(double &Pc, double &Tc, double &vc, double &bc)
-// {
-//
-//     ifstream strmRefStates("input/refStateCrit.txt");
-//     string line("");
-//     if (strmRefStates) {
-//         for (int i=1; i<5; i++) {getline(strmRefStates,line);}
-//         Pc = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         Tc = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         vc = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         bc = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         pInfPrimeCrit = stod(line);
-//     }
-//     else {
-//         cout << "Error : reading refStateCrit.txt file\n"; exit(0);
-//     }
-// }
-//
-// // **************************************************
-//
-// void readAtmInput(double &pAtm, double &cAtm, double &vAtm)
-// {
-//
-//     ifstream strmRefStates("input/refStateAtm.txt");
-//     string line("");
-//     if (strmRefStates) {
-//         for (int i=1; i<5; i++) {getline(strmRefStates,line);}
-//         pAtm = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         cAtm = stod(line);
-//         getline(strmRefStates,line); getline(strmRefStates,line);
-//         vAtm = stod(line);
-//     }
-//     else {
-//         cout << "Error : reading refStateCrit.txt file\n"; exit(0);
-//     }
-// }
-//
-// // **************************************************
-//
-// double computeb1(double bCrit, double brefL, double vCrit, double vrefL)
-// {
-//   return ((bCrit-brefL)/(vCrit-vrefL));
-// }
-//
-// // **************************************************
-//
-// double computeb0(double brefL, double b1L, double vrefL)
-// {
-//   return (brefL - b1L*vrefL);
-// }
-//
-// // **************************************************
-//
-// double computeB(double b0L, double b1L)
-// {
-//   return (b0L/(1-b1L));
-// }
-//
-// // **************************************************
-//
-// //here all 0 subscipted quantities are atmospheric conditions
-// //following equation A30 in the paper
-// double computeC(double p0, double c0, double v0, double Sv1, double Sv2, double b1, double b0, double Pinf0, double Pinf1, double pInfPrimeCrit)
-// {
-//   double count(0);
-//   double gamma(0), f(0), A(0), C(0), term2product1(0), term2product2(0), term2product3(0), term3product1(0), term3product2(0);
-//   double dgamma(0), df(0), dterm2product1(0), dterm2product2(0), dterm2product3(0), dterm3product1(0), dterm3product2(0);
-//
-//   do {
-//     count++;
-//
-//     //have to input the value of pInfPrimeCrit in the readfile or make it zero
-//     A = (pInfPrimeCrit - C)/Tc;
-//     gamma = C*b1/(C - Pinf0*(1 - b1));
-//
-//     //term2product1 is A
-//     term2product2 = p0 + C;
-//     term2product3 = Sv2*gamma/Sv1;
-//
-//     term3product1 = ((p0 + C)/(Sv1/Sv2 - A*(v0 - b1*v0 - b0)));
-//     term3product2 = (A*Sv1/Sv2 - (gamma - b1)*Sv1/(Sv2*(v0 - b1*v0 - b0)));
-//
-//     f = -(c0*c0) - A*v0*v0*(p0 + C)*Sv2*gamma/Sv1 - v0*v0*term3product1*term3product2;
-//
-//     //derivative of gamma wrt C
-//     dgamma = (b1*(C - Pinf0*(1 - b1)) - C*b1)/((C - Pinf0*(1 - b1))*(C - Pinf0*(1 - b1)));
-//     //derivative of term2product1 wrt C basically dA
-//     dterm2product1 = -1/Tc;
-//     //derivative of term2product2 wrt C
-//     dterm2product2 = 1;
-//     //derivative of term2product3 wrt C
-//     dterm2product3 = (Sv2/Sv1)*dgamma;
-//     //derivative of term3product1 wrt C
-//     dterm3product1 = (Sv1/Sv2 - A*(v0 - b1*v0 - b0) - ((p0 + C)*(v0 - b1*v0 - b0)/Tc);
-//     //derivative of term3product2 wrt C
-//     dterm3product2 = -(gamma - 1)/Tc + A*dgamma - dgamma*Sv1/(Sv2*(v0 - b1*v0 - b0)
-//     //derivative of f wrt C for newton rhapson method
-//     df = -v0*v0*(dterm2product1*term2product2*term2product3 + term2product1*dterm2product2*term2product3 + term2product1*term2product2*dterm2product3) - v0*v0*(dterm3product1*term3product2 + term3product1*dterm3product2);
-//
-//     C -= f/df;
-//   } while(abs(f) < 1e-5 && count < 100);
-// }
-//
-// // **************************************************
-//
-// double computeA(double CL, double Tc)
-// {
-//   //we need the CL value to compute AL
-//   return (CL/Tc);
-// }
-//
-// // **************************************************
-//
-// double computeSv1(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, double AL, double BL, double CL)
-// {
-//   double numerator(0), denom(0), tot(0);
-//
-//   for (unsigned int i = 0; i < Texp.size(); i++)
-//   {
-//     numerator = (vLexp[i] - BL)*Texp[i];
-//     denom = (1-b1L)*(Pexp[i] + AL*Texp[i] + CL);
-//     tot += numerator/denom;
-//   }
-//
-//   return tot;
-// }
-//
-// // **************************************************
-//
-// double computeSv2(vector<double> const& Pexp, vector<double> const& Texp, double AL, double BL, double CL)
-// {
-//   double numerator(0), denom(0), tot(0);
-//
-//   for (unsigned int i = 0; i < Texp.size(); i++)
-//   {
-//     numerator = Texp[i]*Texp[i];
-//     denom = (1-b1L)*(1-b1L)*(Pexp[i] + AL*Texp[i] + CL)*(Pexp[i] + AL*Texp[i] + CL);
-//     tot += numerator/denom;
-//   }
-//
-//   return tot;
-// }
-//
-// // **************************************************
-//
-// double computeD(double pressure, double temperature, double b1L, double AL, double CL)
-// {
-//   double numerator(0), denom(0);
-//   numerator = CL*(pressure + CL);
-//   denom = (1-b1L)*(pressure + AL*temperature + CL);
-//   return (numerator/denom);
-// }
-//
-// // **************************************************
-//
-// double computeE(double pressure, double temperature, double b1L, double AL, double CL)
-// {
-//   double term1(0), term2(0);
-//   term1 = (-CL*b1L)/(1-b1L);
-//   term2 = (AL*temperature*CL)/((1-b1L)*(pressure + AL*temperature + CL);
-//   return (term1 + term2);
-// }
-//
-// // **************************************************
-//
-// double computeF(double pressure, double temperature, double b1L, double AL, double CL)
-// {
-//   return ((pressure + AL*temperature + CL)/temperature);
-// }
-//
-// // **************************************************
-//
-// double computecv(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double p0L, double T0L, double ro0L, double c0L, double eL0, double Sv1, double Sv2, double b1L)
-// {
-//   double DL(O), EL(0), FL(0), DL_ref(0), EL_ref(0), FL_ref(0);
-//   double num1(0), num2(0), denom(0);
-//   double cvL_Coeff1(0), double cvL_Coeff2(0);
-//
-//   DL_ref = computeD(p0L, T0L, b1L, AL, CL);
-//   EL_ref = computeE(p0L, T0L, b1L, AL, CL);
-//   FL_ref = computeF(p0L, T0L, b1L, AL, CL);
-//
-//   //use method of least squares to find cvL from equation A26
-//   for (unsigned int i = 0; i < Texp.size(); i++)
-//   {
-//     //do we need a DL array or does a single variable with name DL also work?
-//     //put b1L and the other input parameters here
-//     DL = computeD(Pexp[i], Texp[i], b1L, AL, CL);
-//     EL = computeE(Pexp[i], Texp[i], b1L, AL, CL);
-//     FL = computeF(Pexp[i], Texp[i], b1L, AL, CL);
-//     // DL[i] = computeDL();
-//     // EL[i] = computeEL();
-//     // FL[i] = computeFL();
-//     //in notes this is K1
-//     cvL_Coeff1 = ((Pexp[i] + DL[i] + EL[i])/FL[i] - (p0L + DL_ref + EL_ref)/FL_ref);
-//     //in notes this is K2
-//     cvL_Coeff2 = (Sv1/Sv2)*((DL/FL) - (DL_ref/FL_ref));
-//     //first term in the numerator
-//     num1 += (eLexp[i]*(cvL_Coeff1 + cvL_Coeff2));
-//     //second term in the numerator eL0 is the reference internal energy
-//     num2 += (eL0*(cvL_Coeff1 + cvL_Coeff2));
-//     //denominator
-//     denom += (cvL_Coeff1 + cvL_Coeff2)*(cvL_Coeff1 + cvL_Coeff2);
-//   }
-//
-//   return ((num1 - num2)/denom);
-//
-// }
-//
-// // **************************************************
-//
-// double computegamma(double cvL, double Sv1, double Sv2)
-// {
-//   return (Sv1/(cvL*Sv2) + 1);
-// }
-//
-// // **************************************************
-//
-// double computePinf1(double gammaL, double AL)
-// {
-//   //computing the coeffecient of the temperature term in Pinf
-//   return (AL/gammaL);
-// }
-//
-// // **************************************************
-//
-// double computePinf0(double gammaL, double b1L, double CL)
-// {
-//   double numerator(0), double denom(0);
-//   numerator = CL*(gammaL - b1L);
-//   denom = gammaL*(1 - b1L);
-//
-//   return (numerator/denom);
-// }
-//
-// // **************************************************
-//
-// double computeq(double cvL, double p0L, double e0L)
-// {
-//   double DL_ref(0), EL_ref(0), FL_ref(0);
-//
-//   DL_ref = computeD(p0L, T0L, b1L, AL, CL);
-//   EL_ref = computeE(p0L, T0L, b1L, AL, CL);
-//   FL_ref = computeF(p0L, T0L, b1L, AL, CL);
-//
-//   return (e0L - cvL*(p0L + DL_ref + EL_ref)/FL_ref));
-// }
-//
-// // **************************************************
-//
-// double computeqPrime(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& sLexp, double p0L, double T0L, double ro0L, double c0L, double eL0, double Sv1, double Sv2)
-// {
-//   double term(0), term1(0), term2(0), term3(0);
-//   double pInfPrime(0);
-//
-//   term0 = (gammaL - 1)/(1 - b1L);
-//
-//   for (unsigned int i = 0; i < Texp.size(); i++)
-//   {
-//     pInfPrime = gammaL*Pinf1L*Texp[i] + (gammaL*Pinf0L*(1 - b1L)/(gammaL - b1L));
-//     term1 += sLexp[i];
-//     term2 += cvL*Log((pow(Texp[i],term1))/(pow((Pexp[i] + pInfPrime),term1)));
-//     term3 += (gammaL*Pinf1L*term1*cvL*Texp[i])/(Pexp[i] + pInfPrime);
-//   }
-//
-//   return ((term1 + term2 + term3)/Texp.size());
-// }
-//
-// // **************************************************
-//
-// double computeThEnthalpy(double cvL, double b1L, double b0L, double qL, double Pinf1L, double Pinf0L , double T, double P)
-// {
-//     // Purpose : compute phasic theoric enthalpy
-//     // See eq. (56)
-//
-//     double pInf(0);
-//     double denom1(0), denom2(0), num1(0), num2(0);
-//
-//     PinfL = Pinf1L*T + Pinf0L;
-//
-//     num1 = cvL*T*(gammaL*(P + PinfL) - P*b1L - gammaL*b1L*PinfL);
-//     denom1 = (P + gammaL*Pinf1L*Texp[i] + (gammaL*Pinf0L*(1 - b1L)/(gammaL - b1L)))*(1 - b1L);
-//     num2 = P*b0L;
-//     denom2 = 1 - b1L;
-//
-//     return (num1/denom1 + num2/denom2 + qL);
-// }
-//
-// // **************************************************
-//
-// double computeVkTh(double cvL, double b1L, double b0L, double Pinf1L, double Pinf0L, double T, double P)
-// {
-//     // Purpose : compute theoric specific vol. of phase k
-//     // See eq. (56)
-//
-//     double denom1(0), denom2(0), num1(0), num2(0);
-//
-//     num1 = (gammaL - 1)*cvL*T;
-//     denom1 = (P + gammaL*Pinf1L*Texp[i] + (gammaL*Pinf0L*(1 - b1L)/(gammaL - b1L)))*(1 - b1L);
-//     num2 = b0L;
-//     denom2 = 1 - b1L;
-//
-//     return (num1/denom1 + num2/denom2);
-// }
+#include "calib_liq-vap_edits.h"
+#include "tools.h"
+
+using namespace std;
+
+double meanValue(vector<double> &vec)
+{
+    // Purpose : compute the mean value of a vector
+    double buf(0.);
+    for (unsigned int i = 0; i < vec.size(); i++) {
+        buf += vec[i];
+    }
+    return (buf/vec.size());
+}
+
+void readLiqVapInput(double &p0, double &ro0, double &c0)
+{
+    ifstream strmRefStates("input/refState.txt");
+    string line("");
+    if (strmRefStates) {
+        for (int i=1; i<5; i++) {getline(strmRefStates,line);}
+        p0 = stod(line);
+        getline(strmRefStates,line); getline(strmRefStates,line);
+        ro0 = stod(line);
+        getline(strmRefStates,line); getline(strmRefStates,line);
+        c0 = stod(line);
+    }
+    else {
+        cout << "Error : reading refState.txt file\n"; exit(0);
+    }
+}
+
+// **************************************************
+
+double computecpG(vector<double> const& hGexp, vector<double> const& ThGexp)
+{
+    double mHg, mThg, num(0.), den(0.);
+    mHg = meanValue(hGexp);
+    mThg = meanValue(ThGexp);
+    for (unsigned int i = 0; i < hGexp.size(); i++) {
+        num += ThGexp[i]*(hGexp[i]-mHg);
+        den += ThGexp[i]*(ThGexp[i]-mThg);
+    }
+    return num/den;
+}
+
+// **************************************************
+
+double computeQg(vector<double> const& hGexp, vector<double> const& ThGexp, double cpG)
+{
+    double mHg, mThg;
+    mHg = meanValue(hGexp);
+    mThg = meanValue(ThGexp);
+    return (mHg-cpG*mThg);
+}
+
+// **************************************************
+
+double computecvG(vector<double> const& vGexp, vector<double> const& Texp, vector<double> const& psatExp, double cpG)
+{
+    double num(0.), den(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        num += vGexp[i]*(Texp[i]/psatExp[i]);
+        den += (Texp[i]/psatExp[i])*(Texp[i]/psatExp[i]);
+    }
+    return (cpG - num/den);
+}
+
+// **************************************************
+
+double computeQprimG(vector<double> p, vector<double> T, double cpL, double cpG, double cvL, double cvG, double qL, double qG, double pinfL, double bL)
+{
+    double A,B,C,D,E,sum(0.);
+    B = (qL-qG)/(cpG-cvG);
+    C = (cpG-cpL)/(cpG-cvG);
+    D = (cpL-cvL)/(cpG-cvG);
+    E = bL/(cpG-cvG);
+    for (unsigned int i = 0; i < p.size(); i++) {
+        sum += log(p[i])-(B+E*p[i])/T[i] - C*log(T[i]) - D*log(p[i]+pinfL);
+    }
+    A = sum/p.size();
+    return (A*(cpG-cvG)+cpG-cpL);
+}
+
+// **************************************************
+
+double computeGammak(double cpk, double cvk)
+{
+    return cpk/cvk;
+}
+
+// **************************************************
+
+double computeMeanTp(vector<double> const& psatExp, vector<double> const& Texp, double pinfL)
+{
+    double mtp(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        mtp += Texp[i]/(psatExp[i]+pinfL);  
+    }
+    mtp /= Texp.size(); 
+    return mtp;
+}
+
+double computeMeanTp2(vector<double> const& psatExp, vector<double> const& Texp, double pinfL)
+{
+    double mtp(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        mtp += Texp[i]/((psatExp[i]+pinfL)*(psatExp[i]+pinfL));  
+    }
+    mtp /= Texp.size(); 
+    return mtp;
+}
+
+double computeHeatCapDiffL(vector<double> const& psatExp, vector<double> const& Texp, vector<double> const& vLexp, double mvL, double mTp, double pinfL)
+{
+    double num(0.), den(0.), bf(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        bf = Texp[i]/(psatExp[i]+pinfL);
+        num += bf*(vLexp[i]-mvL);
+        den += bf*(bf-mTp);
+    }
+    return num/den;
+}
+
+double computeDHeatCapDiffL(vector<double> const& psatExp, vector<double> const& Texp, vector<double> const& vLexp, double mvL, double mTp, double mTp2, double pinfL)
+{
+    double m1(0.), m2(0.), m3(0.), m4(0.), bf1(0.), bf2(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        bf1 = Texp[i]/(psatExp[i]+pinfL);
+        bf2 = bf1/(psatExp[i]+pinfL);
+        m1 += -bf2*(vLexp[i]*mvL);
+        m2 += bf1*(bf1 - (1./Texp.size())*mTp);
+        m3 += bf1*(vLexp[i]-mvL);
+        m4 += -bf2*(bf1-mTp)+bf1*(bf2+mTp2);
+    }
+    return (m1*m2-m3*m4)/(m2*m2);
+}
+
+// **************************************************
+
+double computebL(double mvl, double mTp, double diffC)
+{
+    return (mvl-diffC*mTp);
+}
+
+double computeDbL(double mTp, double mTp2, double diffC, double dDiffC)
+{
+    return (-dDiffC*mTp + diffC*mTp2);
+}
+
+// **************************************************
+
+double computeCpL(vector<double> const& Texp, vector<double> const& hLexp, vector<double> const& psatExp, double mhL, double mp, double mT, double bL)
+{
+    double num1(0.), num2(0.), num(0.), den(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        num1 += Texp[i]*(hLexp[i]-mhL);
+        num2 += Texp[i]*(psatExp[i]-mp);
+        den += Texp[i]*(Texp[i]-mT);
+    }
+    num = num1 - bL*num2; 
+    return num/den;
+}
+
+double computeDcpL(vector<double> const& Texp, vector<double> const& psatExp, double mp, double mT, double dbL)
+{
+    double s1(0.), s2(0.);
+    for (unsigned int i = 0; i < Texp.size(); i++) {
+        s1 += Texp[i]*(psatExp[i]-mp);
+        s2 += Texp[i]*(Texp[i]-mT);
+    }
+    return -dbL*(s1/s2);
+}
+
+// **************************************************
+
+double computeQl(double mhL, double mT, double mp, double cpL, double bL)
+{
+    return (mhL-cpL*mT-bL*mp);
+}
+
+// **************************************************
+
+double computePinfL(vector<double> const& psatExp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& hLexp, double p0, double ro0, double c0)
+{
+    double fp, dfp, dfp1, dfp2, pinf1(2.e5), pinf2(0.), err(1.);
+    double mp, mT, mvL, mhL, mTp, mTp2;
+    double diffC, bL, cpL, dDiffC, dbL, dcpL;
+    int count(0);
+
+    mp = meanValue(psatExp);
+    mT = meanValue(Texp);
+    mvL = meanValue(vLexp);
+    mhL = meanValue(hLexp);
+
+    while (err > 1.e-4 && count < 50) {
+        mTp = computeMeanTp(psatExp,Texp,pinf1);
+        mTp2 = computeMeanTp2(psatExp,Texp,pinf1);
+
+        diffC = computeHeatCapDiffL(psatExp,Texp,vLexp,mvL,mTp,pinf1);
+        bL = computebL(mvL,mTp,diffC);
+        cpL = computeCpL(Texp,hLexp,psatExp,mhL,mp,mT,bL);
+        
+        dDiffC = computeDHeatCapDiffL(psatExp,Texp,vLexp,mvL,mTp,mTp2,pinf1);
+        dbL = computeDbL(mTp,mTp2,diffC,dDiffC); 
+        dcpL = computeDcpL(Texp,psatExp,mp,mT,dbL); 
+        
+        dfp1 = -ro0*dbL;
+        dfp2 = (dDiffC*cpL-diffC*dcpL)/(cpL*cpL);
+
+        fp = p0 + pinf1 - (1.-diffC/cpL)*ro0*c0*c0*(1.-bL*ro0);
+        dfp = 1. - ro0*c0*c0*dfp1 + dfp2*ro0*c0*c0*(1.-bL*ro0) + (diffC/cpL)*ro0*c0*c0*dfp1;
+
+        pinf2 = pinf1 - fp/dfp;
+        err = fabs(pinf2-pinf1)/(0.5*(pinf1+pinf2));
+        pinf1 = pinf2;
+        count++;
+        if (count >= 50) {
+            cout << "Warning : newton-raphson of Psat(T) function not converged\n"; exit(0);
+        }
+    }
+    // cout << "Number of iteration NR pinfL : " << count << endl;
+    return pinf1;
+}
+
+// **************************************************
+
+void coeffPsatTh(double cpG, double cpL, double cvG, double cvL, double qG, double qL, double qPrimG, double qPrimL, double bG, double bL, double &A, double &B, double &C, double &D, double &E)
+{
+    A = (cpL-cpG+qPrimG-qPrimL)/(cpG-cvG);
+    B = (qL-qG)/(cpG-cvG);
+    C = (cpG-cpL)/(cpG-cvG);
+    D = (cpL-cvL)/(cpG-cvG);
+    E = (bL-bG)/(cpG-cvG);
+}
+
+double computePsatTh(double A, double B, double C, double D, double E, double pinfL, double T)
+{
+    double fp, dfp, p1(1.e5), p2(0.), err(1.), k(0.);
+    int count(0);
+
+    while (err > 1.e-4 && count < 50) {
+        k = exp(A+B/T+C*log(T));
+        fp = p1 - k*exp(E*p1/T)*pow((p1+pinfL),D);
+        dfp = 1. - k*exp(E*p1/T)*((E/T)*pow((p1+pinfL),D) + D*pow((p1+pinfL),(D-1.)));
+        p2 = p1 - fp/dfp;
+        err = fabs(p2-p1)/(0.5*(p1+p2));
+        p1 = p2;
+        count++;
+        if (count >= 50) 
+            cout << "Warning : newton-raphson of Psat(T) function not converged\n";
+    }
+    if (p2 < 1.e-6)
+        return 0.;
+    else
+        return p2;
+}
+
+double computeThEnthalpy(double cpk, double bk, double qk, double T, double P)
+{
+    return (cpk*T+bk*P+qk);
+}
+
+double computeVkTh(double cpk, double cvk, double pinfk, double bk, double T, double P)
+{
+    return (((cpk-cvk)*T)/(P+pinfk)+bk);
+}
+
+
