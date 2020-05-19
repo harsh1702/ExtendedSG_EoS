@@ -1,38 +1,31 @@
-// #ifndef CALIB_LIQVAP_EDITS_H
-// #define CALIB_LIQVAP_EDITS_H
-//
-// #include <iostream>
-// #include <string>
-// #include <fstream>
-// #include <vector>
-// #include <cmath>
-//
-// // Reading experimental data files
-// void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &brefLG);
-// void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &brefG);
-// void readCritInput(double &Pc, double &Tc, double &vc, double &bc);
-// void readAtmInput(double pAtm, double cAtm, double vAtm);
-//
-//
-// //------For both phases-------
-// double computeb1(double bCrit, double brefL, double vCrit, double vrefL);
-// double computeb0(double brefL, double b1L, double vrefL);
-// double computeB(double b0L, double b1L);
-// double computeC(double p0, double c0, double v0, double Sv1, double Sv2, double b1, double b0, double Pinf0, double Pinf1, double pInfPrimeCrit);
-// double computeA(double CL, double Tc);
-// double computeSv1(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, double AL, double BL, double CL);
-// double computeSv2(vector<double> const& Pexp, vector<double> const& Texp, double AL, double BL, double CL);
-// double computeD(double pressure, double temperature, double b1L, double AL, double CL);
-// double computeE(double pressure, double temperature, double b1L, double AL, double CL);
-// double computeF(double pressure, double temperature, double b1L, double AL, double CL);
-// double computecv(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double p0L, double T0L, double ro0L, double c0L, double eL0, double Sv1, double Sv2, double b1L);
-// double computegamma(double cvL, double Sv1, double Sv2);
-// double computePinf1(double gammaL, double AL);
-// double computePinf0(double gammaL, double b1L, double CL);
-// double computeq(double cvL, double p0L, double e0L);
-// double computeqPrime(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& sLexp, double p0L, double T0L, double ro0L, double c0L, double eL0, double Sv1, double Sv2);
-// double computeThEnthalpy(double cvL, double b1L, double b0L, double qL, double Pinf1L, double Pinf0L , double T, double P);
-// double computeVkTh(double cvL, double b1L, double b0L, double Pinf1L, double Pinf0L, double T, double P);
-//
-//
-// #endif // CALIB_LIQVAP_EDITS_H
+#ifndef CALIB_LIQVAP_H
+#define CALIB_LIQVAP_H
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+// Reading experimental data files
+void readLiqVapInput(double &p0, double &ro0, double &c0);
+
+// --- Vapor phase ---
+double computecpG(std::vector<double> const& hGexp, std::vector<double> const& ThGexp);
+double computeQg(std::vector<double> const& hGexp, std::vector<double> const& ThGexp, double cpG);
+double computecvG(std::vector<double> const& vGexp, std::vector<double> const& Texp, std::vector<double> const& psatExp, double cpG);
+double computeQprimG(std::vector<double> p, std::vector<double> T, double cpL, double cpG, double cvL, double cvG, double qL, double qG, double pinfL, double bL);
+
+// --- Liquid phase ---
+double computeMeanTp(std::vector<double> const& psatExp, std::vector<double> const& Texp, double pinfL);
+double computeMeanTp2(std::vector<double> const& psatExp, std::vector<double> const& Texp, double pinfL);
+double computeHeatCapDiffL(std::vector<double> const& psatExp, std::vector<double> const& Texp, std::vector<double> const& vLexp, double mvL, double mTp, double pinfL);
+double computeDheatCapDiffL(std::vector<double> const& psatExp, std::vector<double> const& Texp, std::vector<double> const& vLexp, double mvL, double mTp, double mTp2, double pinfL);
+double computebL(double mvl, double mTp, double diffC);
+double computeDbL(double mTp, double mTp2, double diffC, double dDiffC);
+double computeCpL(std::vector<double> const& Texp, std::vector<double> const& hLexp, std::vector<double> const& psatExp, double mhL, double mp, double mT, double bL);
+double computeDcpL(std::vector<double> const& Texp, std::vector<double> const& psatExp, double mp, double mT, double dbL);
+double computeQl(double mhL, double mT, double mp, double cpL, double bL);
+double computePinfL(std::vector<double> const& psatExp, std::vector<double> const& Texp, std::vector<double> const& vLexp, std::vector<double> const& hLexp, double p0, double ro0, double c0);
+
+#endif // CALIB_LIQVAP_H
