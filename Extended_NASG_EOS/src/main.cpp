@@ -3,6 +3,7 @@
 
 #include "tools.h"
 #include "calib_liq-vap.h"
+#include "calib_liq-vap_edits.h"
 
 using namespace std;
 
@@ -32,11 +33,14 @@ int main()
     //atmospheric conditions used for finding CL value iteratively
     double pAtm(0), vAtm(0), cAtm(0);
 
+    //NASG parameters
+    double NASGpinfL(0), NASGpinfG(0);
+
 	//currently reading the reference state for liquid and gas properties
   //add the input of critical properties also
   //add the input of atmospheric propeties also
-    readLiqInput(p0L,T0L,ro0L,e0L,brefL);
-    readVapInput(p0G,T0G,ro0G,e0G,brefG);
+    readLiqInput(p0L,T0L,ro0L,e0L,c0L,brefL);
+    readVapInput(p0G,T0G,ro0G,e0G,c0G,brefG);
     readCritInput(Pc,Tc,vc,bc,pInfPrimeCrit);
     readAtmInput(pAtm,cAtm,vAtm);
 
@@ -46,13 +50,16 @@ int main()
     //have to change this also
     readExpData("input/expData.txt",Texp,Pexp,vGexp,vLexp,hGexp,hLexp,LvExp,eGexp,eLexp,sGexp,sLexp);
 
-    // mvL = meanValue(vLexp);
-    // mT = meanValue(Texp);
-    // mp = meanValue(psatExp);
-    // mhL = meanValue(hLexp);
-    //
-    // mvG = meanValue(vGexp);
-    // mhG = meanValue(hGexp);
+
+    //finding the Pinf for the NASG case to imporve the guess for C
+    //change the input values of P and T to make it saturation properties
+    //edit the reference states speed of sound must be added
+
+    // --- Liquid phase ---
+    NASGpinfL = computePinfL(Pexp,Texp,vLexp,hLexp,p0L,ro0L,c0L);
+    // --- Gaseous phase ---
+    NASGpinfG = computePinfG(Pexp,Texp,vGexp,hGexp,p0G,ro0G,c0G);
+
 
     // --- Liquid phase ---
     b1L = computeb1(bc, brefL, vc, v0L);
@@ -60,7 +67,7 @@ int main()
     BL = computeB(b0L, b1L);
     //CL function
     //Sv1 cant be an arguement
-    CL = computeCL(Pexp,Texp,vLexp,eLexp,pAtm,cAtm,vAtm,p0L,T0L,e0L,b1L,b0L,pInfPrimeCrit,Tc);
+    CL = computeCL(Pexp,Texp,vLexp,eLexp,pAtm,cAtm,vAtm,p0L,T0L,e0L,b1L,b0L,pInfPrimeCrit,Tc,NASGpinfL);
     //CL = 208.76e6;
     AL = computeA(CL,Tc,pInfPrimeCrit);
     Sv1L = computeSv1(Pexp, Texp, vLexp, AL, BL, CL, b1L);
@@ -92,7 +99,7 @@ int main()
     BG = computeB(b0G, b1G);
     //CL function
     //Sv1 cant be an arguement
-    CG = computeCG(Pexp,Texp,vGexp,eGexp,pAtm,cAtm,vAtm,p0G,T0G,e0G,b1G,b0G,pInfPrimeCrit,Tc);
+    CG = computeCG(Pexp,Texp,vGexp,eGexp,pAtm,cAtm,vAtm,p0G,T0G,e0G,b1G,b0G,pInfPrimeCrit,Tc,NASGpinfG);
     //CL = 208.76e6;
     AG = computeA(CG,Tc,pInfPrimeCrit);
     Sv1G = computeSv1(Pexp, Texp, vGexp, AG, BG, CG, b1G);
