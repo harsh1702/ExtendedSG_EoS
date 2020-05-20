@@ -1,5 +1,5 @@
-#ifndef CALIB_LIQVAP_H
-#define CALIB_LIQVAP_H
+#ifndef CALIB_LIQVAP_EDITS_H
+#define CALIB_LIQVAP_EDITS_H
 
 #include <iostream>
 #include <string>
