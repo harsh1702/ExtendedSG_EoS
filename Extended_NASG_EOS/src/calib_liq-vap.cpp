@@ -6,13 +6,13 @@ using namespace std;
 
 //Note that the arguements passed for all the functions are slightly wierd
 
-    //3 files for inputing the refference state and critical values data
+    //4 files for inputing the refference state and critical values data
     //one for liquid state
     //one for vapurs state
     //one for critical values
-    //need to input much more data
+    //one for atmospheric conditions
 
-void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &brefL)
+void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &c0L, double &brefL)
 {
 
     ifstream strmRefStates("input/refStateLiq.txt");
@@ -27,6 +27,8 @@ void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &b
         getline(strmRefStates,line); getline(strmRefStates,line);
         e0L = stod(line);
         getline(strmRefStates,line); getline(strmRefStates,line);
+        c0L = stod(line);
+        getline(strmRefStates,line); getline(strmRefStates,line);
         brefL = stod(line);
     }
     else {
@@ -36,7 +38,7 @@ void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &b
 
 // **************************************************
 
-void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &brefG)
+void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &e0G, double &brefG)
 {
 
     ifstream strmRefStates("input/refStateVap.txt");
@@ -50,6 +52,8 @@ void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &b
         ro0G = stod(line);
         getline(strmRefStates,line); getline(strmRefStates,line);
         e0G = stod(line);
+        getline(strmRefStates,line); getline(strmRefStates,line);
+        c0G = stod(line);
         getline(strmRefStates,line); getline(strmRefStates,line);
         brefG = stod(line);
     }
@@ -210,9 +214,10 @@ double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<
 
 // **************************************************
 
-double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc)
+double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double NASGpinfG)
 {
-  double count(0), f(0), f2(0), C(-15312), C2(0);
+  //will check the convergence of C for the given initial value here then apply it for the CL function
+  double count(0), f(0), f2(0), C(NASGpinfG), C2(0);
   double f3(0), C3(0);
 
   do {
@@ -453,8 +458,6 @@ double computeF(double pressure, double temperature, double AL, double CL)
   return (((pressure + AL*temperature + CL)/temperature) - AL);
 }
 
-
-//This was my own method of solving the equation for cv, convergence was not able to be achieved in this case
 // **************************************************
 
 // double computecv(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& eLexp, double p0L, double T0L, double eL0, double Sv1, double Sv2, double b1L, double AL, double CL)
