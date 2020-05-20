@@ -25,6 +25,7 @@ In the 'res' folder execute the command given below for plots of theoretical vs 
 $./runPlot.sh
 
 Things to add:-
-1)Better guessing for intial C value based on the pInf value from the NASG formulation
-2)Calculation of liquid and gaseous entropies.
+1)Better guessing for intial C value based on the pInf value from the NASG formulation<br/>
+2)Calculation of liquid and gaseous entropies<br/>
+3)The reference state speeds of sound and other small edits and corrections in the code<br/>
 
