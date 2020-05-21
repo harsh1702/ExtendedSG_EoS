@@ -214,7 +214,7 @@ double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<
 
 // **************************************************
 
-double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double NASGpinfG)
+double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc)
 {
   //will check the convergence of C for the given initial value here then apply it for the CL function
   double count(0), f(0), f2(0), C(NASGpinfG), C2(0);
