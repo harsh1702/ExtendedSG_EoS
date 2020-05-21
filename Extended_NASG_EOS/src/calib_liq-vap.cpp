@@ -12,7 +12,7 @@ using namespace std;
     //one for critical values
     //one for atmospheric conditions
 
-void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &c0L, double &brefL)
+void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &brefL)
 {
 
     ifstream strmRefStates("input/refStateLiq.txt");
@@ -36,7 +36,7 @@ void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &c
 
 // **************************************************
 
-void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &c0G, double &brefG)
+void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &brefG)
 {
 
     ifstream strmRefStates("input/refStateVap.txt");
