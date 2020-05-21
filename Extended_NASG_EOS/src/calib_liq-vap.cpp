@@ -27,8 +27,6 @@ void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &c
         getline(strmRefStates,line); getline(strmRefStates,line);
         e0L = stod(line);
         getline(strmRefStates,line); getline(strmRefStates,line);
-        c0L = stod(line);
-        getline(strmRefStates,line); getline(strmRefStates,line);
         brefL = stod(line);
     }
     else {
@@ -52,8 +50,6 @@ void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &c
         ro0G = stod(line);
         getline(strmRefStates,line); getline(strmRefStates,line);
         e0G = stod(line);
-        getline(strmRefStates,line); getline(strmRefStates,line);
-        c0G = stod(line);
         getline(strmRefStates,line); getline(strmRefStates,line);
         brefG = stod(line);
     }
