@@ -53,7 +53,7 @@ int main()
     BL = computeB(b0L, b1L);
     //CL function
     //Sv1 cant be an arguement
-    CL = computeCL(Pexp,Texp,vLexp,eLexp,pAtm,cAtm,vAtm,p0L,T0L,e0L,b1L,b0L,pInfPrimeCrit,Tc,NASGpinfL);
+    CL = computeCL(Pexp,Texp,vLexp,eLexp,pAtm,cAtm,vAtm,p0L,T0L,e0L,b1L,b0L,pInfPrimeCrit,Tc);
     //CL = 208.76e6;
     AL = computeA(CL,Tc,pInfPrimeCrit);
     Sv1L = computeSv1(Pexp, Texp, vLexp, AL, BL, CL, b1L);
@@ -85,7 +85,7 @@ int main()
     BG = computeB(b0G, b1G);
     //CL function
     //Sv1 cant be an arguement
-    CG = computeCG(Pexp,Texp,vGexp,eGexp,pAtm,cAtm,vAtm,p0G,T0G,e0G,b1G,b0G,pInfPrimeCrit,Tc,NASGpinfG);
+    CG = computeCG(Pexp,Texp,vGexp,eGexp,pAtm,cAtm,vAtm,p0G,T0G,e0G,b1G,b0G,pInfPrimeCrit,Tc);
     //CL = 208.76e6;
     AG = computeA(CG,Tc,pInfPrimeCrit);
     Sv1G = computeSv1(Pexp, Texp, vGexp, AG, BG, CG, b1G);
