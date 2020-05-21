@@ -8,8 +8,6 @@ Density       (ro0)   [kg/m3]
 996.51
 Internal Energy	(e0)	[J/Kg]
 11.323e4
-Sound Speed   (c0)  [m/s]
--
 Covolume	(bref)	[m^3/Kg]	
 0.0009125
 
