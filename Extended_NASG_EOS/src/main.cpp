@@ -3,7 +3,6 @@
 
 #include "tools.h"
 #include "calib_liq-vap.h"
-#include "calib_liq-vap_edits.h"
 
 using namespace std;
 
@@ -33,14 +32,11 @@ int main()
     //atmospheric conditions used for finding CL value iteratively
     double pAtm(0), vAtm(0), cAtm(0);
 
-    //NASG parameters
-    double NASGpinfL(0), NASGpinfG(0);
-
 	//currently reading the reference state for liquid and gas properties
   //add the input of critical properties also
   //add the input of atmospheric propeties also
-    readLiqInput(p0L,T0L,ro0L,e0L,c0L,brefL);
-    readVapInput(p0G,T0G,ro0G,e0G,c0G,brefG);
+    readLiqInput(p0L,T0L,ro0L,e0L,brefL);
+    readVapInput(p0G,T0G,ro0G,e0G,brefG);
     readCritInput(Pc,Tc,vc,bc,pInfPrimeCrit);
     readAtmInput(pAtm,cAtm,vAtm);
 
@@ -49,16 +45,6 @@ int main()
     //reading the saturation properties of the substance
     //have to change this also
     readExpData("input/expData.txt",Texp,Pexp,vGexp,vLexp,hGexp,hLexp,LvExp,eGexp,eLexp,sGexp,sLexp);
-
-
-    //finding the Pinf for the NASG case to imporve the guess for C
-    //change the input values of P and T to make it saturation properties
-    //edit the reference states speed of sound must be added
-
-    // --- Liquid phase ---
-    NASGpinfL = computePinfL(Pexp,Texp,vLexp,hLexp,p0L,ro0L,c0L);
-    // --- Gaseous phase ---
-    NASGpinfG = computePinfG(Pexp,Texp,vGexp,hGexp,p0G,ro0G,c0G);
 
 
     // --- Liquid phase ---
