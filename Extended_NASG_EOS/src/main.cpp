@@ -3,7 +3,7 @@
 
 #include "tools.h"
 #include "calib_liq-vap.h"
-#include "calib_liq-vap_edits.h"
+#include "calib_liqNASGref.h"
 
 using namespace std;
 
@@ -12,8 +12,8 @@ int main()
     string run("res/");
     //here it is assumed that pinfprime at the critical point is 0
     //0 represents the refernce state
-    double p0L, ro0L, e0L, T0L, brefL;
-    double p0G, ro0G, e0G, T0G, brefG;
+    double p0L, ro0L, e0L, T0L, c0L, brefL;
+    double p0G, ro0G, e0G, T0G, c0G, brefG;
     double Pc, Tc, vc, bc, pInfPrimeCrit;
 
     //cP is not required
@@ -41,6 +41,8 @@ int main()
   //add the input of atmospheric propeties also
     readLiqInput(p0L,T0L,ro0L,e0L,c0L,brefL);
     readVapInput(p0G,T0G,ro0G,e0G,c0G,brefG);
+    // readLiqInput(p0L,T0L,ro0L,e0L,brefL);
+    // readVapInput(p0G,T0G,ro0G,e0G,brefG);
     readCritInput(Pc,Tc,vc,bc,pInfPrimeCrit);
     readAtmInput(pAtm,cAtm,vAtm);
 
@@ -58,7 +60,7 @@ int main()
     // --- Liquid phase ---
     NASGpinfL = computePinfL(Pexp,Texp,vLexp,hLexp,p0L,ro0L,c0L);
     // --- Gaseous phase ---
-    NASGpinfG = computePinfG(Pexp,Texp,vGexp,hGexp,p0G,ro0G,c0G);
+    NASGpinfG = computePinfL(Pexp,Texp,vGexp,hGexp,p0G,ro0G,c0G);
 
 
     // --- Liquid phase ---
@@ -68,6 +70,7 @@ int main()
     //CL function
     //Sv1 cant be an arguement
     CL = computeCL(Pexp,Texp,vLexp,eLexp,pAtm,cAtm,vAtm,p0L,T0L,e0L,b1L,b0L,pInfPrimeCrit,Tc,NASGpinfL);
+    //CL = computeCL(Pexp,Texp,vLexp,eLexp,pAtm,cAtm,vAtm,p0L,T0L,e0L,b1L,b0L,pInfPrimeCrit,Tc);
     //CL = 208.76e6;
     AL = computeA(CL,Tc,pInfPrimeCrit);
     Sv1L = computeSv1(Pexp, Texp, vLexp, AL, BL, CL, b1L);
@@ -81,7 +84,7 @@ int main()
     // cvL = computecv(Pexp, Texp, eLexp, p0L, T0L, e0L, Sv1L, Sv2L, b1L, AL, CL);
     // gammaL = computegamma(cvL, Sv1L, Sv2L);
     gammaL = computegamma(Sv1L, Sv2L, Se1L, Se2L, Se3L, Se4L, Se5L);
-    std::cout << "gamma L value " <<gammaL<< '\n';
+    //std::cout << "gamma L value " <<gammaL<< '\n';
     cvL = computecv(gammaL, Sv1L, Sv2L);
     cpL = gammaL*cvL;
     Pinf1L = computePinf1(gammaL, AL);
@@ -100,7 +103,8 @@ int main()
     //CL function
     //Sv1 cant be an arguement
     CG = computeCG(Pexp,Texp,vGexp,eGexp,pAtm,cAtm,vAtm,p0G,T0G,e0G,b1G,b0G,pInfPrimeCrit,Tc,NASGpinfG);
-    //CL = 208.76e6;
+    //CG = computeCG(Pexp,Texp,vGexp,eGexp,pAtm,cAtm,vAtm,p0G,T0G,e0G,b1G,b0G,pInfPrimeCrit,Tc);
+
     AG = computeA(CG,Tc,pInfPrimeCrit);
     Sv1G = computeSv1(Pexp, Texp, vGexp, AG, BG, CG, b1G);
     Sv2G = computeSv2(Pexp, Texp, AG, CG, b1G);
@@ -113,7 +117,7 @@ int main()
     // cvL = computecv(Pexp, Texp, eLexp, p0L, T0L, e0L, Sv1L, Sv2L, b1L, AL, CL);
     // gammaL = computegamma(cvL, Sv1L, Sv2L);
     gammaG = computegamma(Sv1G, Sv2G, Se1G, Se2G, Se3G, Se4G, Se5G);
-    std::cout << "gamma G value " <<gammaG<< '\n';
+    //std::cout << "gamma G value " <<gammaG<< '\n';
     cvG = computecv(gammaG, Sv1G, Sv2G);
     cpG = gammaG*cvG;
     Pinf1G = computePinf1(gammaG, AG);

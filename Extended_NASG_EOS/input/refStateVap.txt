@@ -10,6 +10,5 @@ Internal Energy	(e0)	[J/Kg]
 0
 Sound Speed     (c0)   [m/s]
 -
-Covolume	(bref)	[m^3/Kg]	
+Covolume	(bref)	[m^3/Kg]
 1e-6
-

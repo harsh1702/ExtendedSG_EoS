@@ -10,8 +10,8 @@
 using namespace std;
 
 // Reading experimental data files
-void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &brefLG);
-void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &brefG);
+void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L,double &c0L, double &brefLG);
+void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &c0L, double &brefG);
 void readCritInput(double &Pc, double &Tc, double &vc, double &bc, double &pInfPrimeCrit);
 void readAtmInput(double &pAtm, double &cAtm, double &vAtm);
 
@@ -22,9 +22,9 @@ double computeb0(double brefL, double b1L, double vrefL);
 double computeB(double b0L, double b1L);
 double computefunction(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double C);
 //we have seperate computeC functions for gases and liquids because the initial value of C is different
-//try to change the guessing of the C value 
-double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc);
-double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc);
+//try to change the guessing of the C value
+double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double NASGpinfL);
+double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double NASGpinfG);
 double computeA(double CL, double Tc, double pInfPrimeCrit);
 double computeSv1(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, double AL, double BL, double CL, double b1L);
 double computeSv2(vector<double> const& Pexp, vector<double> const& Texp, double AL, double CL, double b1L);
@@ -48,6 +48,8 @@ double computeqPrime(vector<double> const& Pexp, vector<double> const& Texp, vec
 double computeThEnthalpy(double cvL, double b1L, double b0L, double qL, double Pinf1L, double Pinf0L, double gammaL, double T, double P);
 double computeVkTh(double cvL, double b1L, double b0L, double Pinf1L, double Pinf0L, double gammaL, double T, double P);
 double computeThInternalEnergy(double cvL, double b1L, double qL, double Pinf1L, double Pinf0L, double gammaL, double T, double P);
+
+//calib_liqNASGref *calib_liqNASGref;
 
 
 #endif // CALIB_LIQVAP_EDITS_H

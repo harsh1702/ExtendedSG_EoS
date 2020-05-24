@@ -1,9 +1,9 @@
-#include "calib_liq-vap_edits.h"
+#include "calib_liqNASGref.h"
 #include "tools.h"
 
 using namespace std;
 
-double meanValue(vector<double> &vec)
+double meanValue(vector<double> const& vec)
 {
     // Purpose : compute the mean value of a vector
     double buf(0.);
@@ -12,6 +12,16 @@ double meanValue(vector<double> &vec)
     }
     return (buf/vec.size());
 }
+
+// **************************************************
+
+// void computemeanvalues(double *mvL, double *mT, double *mp, double *mhL)
+// {
+//     mvL = meanValue(vLexp);
+//     mT = meanValue(Texp);
+//     mp = meanValue(psatExp);
+//     mhL = meanValue(hLexp);
+// }
 
 // **************************************************
 

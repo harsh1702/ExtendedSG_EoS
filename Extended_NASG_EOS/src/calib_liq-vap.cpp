@@ -13,6 +13,7 @@ using namespace std;
     //one for atmospheric conditions
 
 void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &c0L, double &brefL)
+//void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &brefL)
 {
 
     ifstream strmRefStates("input/refStateLiq.txt");
@@ -39,6 +40,7 @@ void readLiqInput(double &p0L, double &T0L, double &ro0L, double &e0L, double &c
 // **************************************************
 
 void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &c0G, double &brefG)
+//void readVapInput(double &p0G, double &T0G, double &ro0G, double &e0G, double &brefG)
 {
 
     ifstream strmRefStates("input/refStateVap.txt");
@@ -171,9 +173,10 @@ double computefunction(vector<double> const& Pexp, vector<double> const& Texp, v
 
 //here all 0 subscipted quantities are atmospheric conditions
 //following equation A30 in the paper
-double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc)
+// double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc)
+double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double NASGpinfL)
 {
-  double count(0), f(0), f2(0), C(308.78e6), C2(0);
+  double count(0), f(0), f2(0), C(1.32e8), C2(0);
   double f3(0), C3(0);
 
   do {
@@ -204,10 +207,8 @@ double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<
     C -= 2*f*f/(f2 - f3);
 
   } while(1);//count < 100);
-  //convergence is not exactly being obtained in a hundred iterations, hence will keep it infinite for now
 
   std::cout << "the value of C in CL" <<C<< '\n';
-  //C should be in aroound 308.76e6 in value
 
   return C;
 }
@@ -215,9 +216,10 @@ double computeCL(vector<double> const& Pexp, vector<double> const& Texp, vector<
 // **************************************************
 
 double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc, double NASGpinfG)
+//double computeCG(vector<double> const& Pexp, vector<double> const& Texp, vector<double> const& vLexp, vector<double> const& eLexp, double pAtm, double cAtm, double vAtm, double p0, double T0, double e0, double b1, double b0, double pInfPrimeCrit, double Tc)
 {
   //will check the convergence of C for the given initial value here then apply it for the CL function
-  double count(0), f(0), f2(0), C(NASGpinfG), C2(0);
+  double count(0), f(0), f2(0), C(8.86e5), C2(0);
   double f3(0), C3(0);
 
   do {
