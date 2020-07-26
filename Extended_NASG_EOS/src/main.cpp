@@ -122,17 +122,17 @@ int main()
     cout << "b0L     (m3/kg)       : " << b0L << endl;
     cout << "\n";
 
-    cout << "--- Gas (G) ---\n";
-    cout << "cpG    (J.kg-1.K-1)  : " << cpG << endl;
-    cout << "qG     (J.kg-1)      : " << qG << endl;
-    cout << "Pinf1G  (Pa)          : " << Pinf1G << endl;
-    cout << "Pinf0G  (Pa)          : " << Pinf0G << endl;
-    cout << "cvG    (J.kg-1.K-1)  : " << cvG << endl;
-    cout << "gammaG (-)           : " << gammaG << endl;
-    cout << "q'G    (J.kg-1)      : " << qPrimeG << endl;
-    cout << "b1G     (m3/kg)       : " << b1G << endl;
-    cout << "b0G     (m3/kg)       : " << b0G << endl;
-    cout << "\n";
+    //cout << "--- Gas (G) ---\n";
+    //cout << "cpG    (J.kg-1.K-1)  : " << cpG << endl;
+    //cout << "qG     (J.kg-1)      : " << qG << endl;
+    //cout << "Pinf1G  (Pa)          : " << Pinf1G << endl;
+    //cout << "Pinf0G  (Pa)          : " << Pinf0G << endl;
+    //cout << "cvG    (J.kg-1.K-1)  : " << cvG << endl;
+    //cout << "gammaG (-)           : " << gammaG << endl;
+    //cout << "q'G    (J.kg-1)      : " << qPrimeG << endl;
+    //cout << "b1G     (m3/kg)       : " << b1G << endl;
+    //cout << "b0G     (m3/kg)       : " << b0G << endl;
+    //cout << "\n";
 
     //writeResults(cpL,qL,pinfL,cvL,gammaL,qPrimL,bL,cpG,qG,PinfG,cvG,gammaG,qPrimG,bG);
 
