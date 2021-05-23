@@ -25,6 +25,11 @@ Plotting results<br/>
 In the 'res' folder execute the command given below for plots of theoretical vs experimental inputs<br/>
 $./runPlot.sh
 
+The liquid phase specific volume and enthalpy are compared to give: -
+![vLplot](https://user-images.githubusercontent.com/48854316/119270980-0cd08e00-bc1d-11eb-917f-e17dabca2e93.png)
+![hLplot](https://user-images.githubusercontent.com/48854316/119270991-12c66f00-bc1d-11eb-8339-a22f2bd5b936.png)
+
 Things to add:-<br/>
 1)Calculation of liquid and gaseous entropies<br/>
+2)Fix the internal energy calculation<br/>
 
